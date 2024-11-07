@@ -11,14 +11,14 @@ const Globe = () => {
   const convertLatLonToVector3 = (lat, lon, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
     const theta = (lon + 180) * (Math.PI / 180);
-  
+
     const x = -(radius * Math.sin(phi) * Math.cos(theta));
     const y = radius * Math.cos(phi);
     const z = radius * Math.sin(phi) * Math.sin(theta);
-  
+
     return new THREE.Vector3(x, y, z);
   };
-  
+
 
   useEffect(() => {
     const fetchGeoJSON = async () => {
@@ -142,40 +142,40 @@ const Globe = () => {
       outline.userData = { name: countryName }; // Set country name for the outline
       earthGroup.add(outline);
       countryLines.push(outline);
-    
+
       // Create filled shape
       const shapePoints = points.map(point => new THREE.Vector2(point.x, point.y));
-    
+
       // Create a shape using the projected points
       const shape = new THREE.Shape(shapePoints);
-    
+
       // Create the geometry with depth to match the globe's surface
       const extrudeSettings = {
         steps: 1,
         depth: 0.001, // Increase depth for better visibility
         bevelEnabled: false
       };
-    
+
       const meshGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    
+
       // Create a new mesh for the filled shape
       const fillMesh = new THREE.Mesh(meshGeometry, fillMaterial);
-    
+
       // Adjust the fill mesh position to sit on the globe's surface
       const radius = 1; // The radius of your globe
       fillMesh.geometry.computeBoundingBox();
       const boundingBox = fillMesh.geometry.boundingBox;
       const center = boundingBox.getCenter(new THREE.Vector3());
-    
+
       fillMesh.position.set(center.x, center.y, radius); // Start position at the globe's surface
-    
+
       // Adjust to sit on the globe surface
       fillMesh.position.add(new THREE.Vector3(center.x, center.y, center.z).normalize().multiplyScalar(radius));
-    
+
       earthGroup.add(fillMesh);
     };
-     
-    
+
+
     const animate = () => {
       requestAnimationFrame(animate);
       earthGroup.rotation.y += 0.0002;
@@ -186,31 +186,31 @@ const Globe = () => {
     const onMouseClick = (event) => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-  
+
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(countryLines);
-  
+
       if (intersects.length > 0) {
-          const intersectedObject = intersects[0].object;
-  
-          if (intersectedObject.userData && intersectedObject.userData.name) {
-              console.log('Country clicked:', intersectedObject.userData.name);
-              setSelectedCountry(intersectedObject.userData.name);
-          }
-  
-          // Convert intersection point to latitude and longitude
-          const intersectionPoint = intersects[0].point;
-          const radius = intersectionPoint.length(); // Distance from origin (center of the globe)
-  
-          // Calculate latitude and longitude from intersectionPoint
-          const lat = Math.asin(intersectionPoint.y / radius) * (180 / Math.PI);
-          const lon = Math.atan2(intersectionPoint.z, intersectionPoint.x) * (180 / Math.PI);
-  
-          console.log(`Latitude: ${lat.toFixed(4)}, Longitude: ${lon.toFixed(4)}`);
+        const intersectedObject = intersects[0].object;
+
+        if (intersectedObject.userData && intersectedObject.userData.name) {
+          console.log('Country clicked:', intersectedObject.userData.name);
+          setSelectedCountry(intersectedObject.userData.name);
+        }
+
+        // Convert intersection point to latitude and longitude
+        const intersectionPoint = intersects[0].point;
+        const radius = intersectionPoint.length(); // Distance from origin (center of the globe)
+
+        // Calculate latitude and longitude from intersectionPoint
+        const lat = Math.asin(intersectionPoint.y / radius) * (180 / Math.PI);
+        const lon = Math.atan2(intersectionPoint.z, intersectionPoint.x) * (180 / Math.PI);
+
+        console.log(`Latitude: ${lat.toFixed(4)}, Longitude: ${lon.toFixed(4)}`);
       } else {
-          setSelectedCountry(null);
+        setSelectedCountry(null);
       }
-  };  
+    };
 
     window.addEventListener('click', onMouseClick);
 
@@ -238,18 +238,24 @@ const Globe = () => {
       <div id="globeViz" ref={mountRef} />
       {selectedCountry && (
         <div className="info-box" style={{
-          position: 'absolute',
-          top: '10px',
-          left: '10px',
+          position: 'fixed',  // Fixes the box in place relative to the viewport
+          top: '15vw',  // Distance from the top of the screen
+          left: '75vw',  // Distance from the left of the screen
           padding: '10px',
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: 'rgba(31, 31, 31, 0.9)',
           borderRadius: '5px',
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
           zIndex: 10,
+          width: '250px',  // Fixed width for consistency
+          maxWidth: '90%',  // Ensures it doesn’t get too wide on smaller screens
         }}>
-          Selected Country: {selectedCountry}
+          <h3>Selected Country: {selectedCountry.name}</h3>
+          <p><strong>Capital:</strong> {selectedCountry.capital}</p>
+          <p><strong>Population:</strong> {selectedCountry.population}</p>
+          <p><strong>Language:</strong> {selectedCountry.language}</p>
         </div>
       )}
+
     </div>
   );
 };
