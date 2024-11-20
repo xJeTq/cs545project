@@ -1,8 +1,8 @@
-// src/components/Globe.js
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { getFresnelMat } from './getFresnelMat.js';
+import countryData from './countries.json'; // Import your countries.json
 
 const Globe = () => {
   const mountRef = useRef(null);
@@ -19,11 +19,10 @@ const Globe = () => {
     return new THREE.Vector3(x, y, z);
   };
 
-
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
-        const response = await fetch('../ne_50m_admin_0_countries.geojson');
+        const response = await fetch('../polygons.geojson');
         if (!response.ok) {
           throw new Error('Network response was not ok: ' + response.statusText);
         }
@@ -136,45 +135,12 @@ const Globe = () => {
     };
 
     const createOutlineAndFill = (points, outlineMaterial, fillMaterial, countryName) => {
-      // Create outline
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
       const outline = new THREE.LineLoop(geometry, outlineMaterial);
       outline.userData = { name: countryName }; // Set country name for the outline
       earthGroup.add(outline);
       countryLines.push(outline);
-
-      // Create filled shape
-      // const shapePoints = points.map(point => new THREE.Vector2(point.x, point.y));
-
-      // Create a shape using the projected points
-      // const shape = new THREE.Shape(shapePoints);
-
-      // Create the geometry with depth to match the globe's surface
-      const extrudeSettings = {
-        steps: 1,
-        depth: 0.001, // Increase depth for better visibility
-        bevelEnabled: false
-      };
-
-      // const meshGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-
-      // Create a new mesh for the filled shape
-      // const fillMesh = new THREE.Mesh(meshGeometry, fillMaterial);
-
-      // Adjust the fill mesh position to sit on the globe's surface
-      // const radius = 1; // The radius of your globe
-      // fillMesh.geometry.computeBoundingBox();
-      // const boundingBox = fillMesh.geometry.boundingBox;
-      // const center = boundingBox.getCenter(new THREE.Vector3());
-
-      // fillMesh.position.set(center.x, center.y, radius); // Start position at the globe's surface
-
-      // // Adjust to sit on the globe surface
-      // fillMesh.position.add(new THREE.Vector3(center.x, center.y, center.z).normalize().multiplyScalar(radius));
-
-      // earthGroup.add(fillMesh);
     };
-
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -182,6 +148,17 @@ const Globe = () => {
       renderer.render(scene, camera);
     };
     animate();
+
+    const getLatLonFromIntersect = (point) => {
+      const radius = point.length();
+      const phi = Math.acos(point.y / radius);  // Latitude
+      const theta = Math.atan2(point.z, point.x);  // Longitude
+
+      const lat = (90 - (phi * 180) / Math.PI);  // Convert to latitude
+      const lon = (theta * 180) / Math.PI - 180;  // Convert to longitude
+
+      return { lat, lon };
+    };
 
     const onMouseClick = (event) => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -195,17 +172,27 @@ const Globe = () => {
 
         if (intersectedObject.userData && intersectedObject.userData.name) {
           console.log('Country clicked:', intersectedObject.userData.name);
-          setSelectedCountry(intersectedObject.userData.name);
+
+          // Find the selected country data from your JSON file
+          const countryInfo = countryData.find(
+            country => country.name === intersectedObject.userData.name
+          );
+
+          if (countryInfo) {
+            setSelectedCountry({
+              name: countryInfo.name,
+              capital: countryInfo.capital,
+              population: countryInfo.population.toLocaleString(),  // Format population with commas
+              currency: countryInfo.currency.name,  // Use currency name
+              code: countryInfo.currency.code,
+              languages: countryInfo.languages.join(', ')  // Join language array into a string
+            });
+          }
+
+          // Log the coordinates (lat, lon) of the clicked point
+          const latLon = getLatLonFromIntersect(intersects[0].point);
+          console.log(`Coordinates: Latitude = ${latLon.lat}, Longitude = ${latLon.lon}`);
         }
-
-        const intersectionPoint = intersects[0].point;
-        const radius = intersectionPoint.length();
-
-        // Calculate latitude and longitude from intersectionPoint
-        const lat = Math.asin(intersectionPoint.y / radius) * (180 / Math.PI);
-        const lon = Math.atan2(intersectionPoint.z, intersectionPoint.x) * (180 / Math.PI);
-
-        console.log(`Latitude: ${lat.toFixed(4)}, Longitude: ${lon.toFixed(4)}`);
       } else {
         setSelectedCountry(null);
       }
@@ -235,29 +222,46 @@ const Globe = () => {
   return (
     <div>
       <div id="globeViz" ref={mountRef} />
+
       {selectedCountry && (
         <div className="info-box" style={{
-          position: 'fixed',  // Fixes the box in place relative to the viewport
-          top: '15vw',  // Distance from the top of the screen
-          left: '75vw',  // Distance from the left of the screen
+          position: 'fixed',
+          top: '15vw',
+          left: '75vw',
           padding: '10px',
           backgroundColor: 'rgba(31, 31, 31, 0.9)',
           borderRadius: '5px',
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
           zIndex: 10,
-          width: '250px',  // Fixed width for consistency
-          maxWidth: '90%',  // Ensures it doesn’t get too wide on smaller screens
+          width: '250px',
+          maxWidth: '90%',
         }}>
           <h3>Selected Country: {selectedCountry.name}</h3>
           <p><strong>Capital:</strong> {selectedCountry.capital}</p>
           <p><strong>Population:</strong> {selectedCountry.population}</p>
-          <p><strong>Currency(s):</strong> {selectedCountry.currency}</p>
+          <p><strong>Currency(s):</strong> {selectedCountry.currency} {"(" + selectedCountry.code + ")"}</p>
           <p><strong>Language(s):</strong> {selectedCountry.languages}</p>
         </div>
       )}
 
+      {/* Note at the bottom left */}
+      <div style={{
+        position: 'fixed',
+        bottom: '10px', // Adjust this to position it further up or down if needed
+        left: '10px',
+        fontSize: '12px',
+        color: '#ffffff',
+        backgroundColor: 'rgba(31, 31, 31, 0.9)',
+        padding: '5px 10px',
+        borderRadius: '5px',
+        boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
+        zIndex: 5
+      }}>
+        All data is from 2024
+      </div>
     </div>
   );
+
 };
 
 export default Globe;
