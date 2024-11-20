@@ -54,14 +54,6 @@ const Globe = () => {
 
     const controls = new OrbitControls(camera, renderer.domElement);
 
-    controls.enablePan = true; // Enable panning
-    controls.screenSpacePanning = true; // Use screen space panning
-    controls.mouseButtons = {
-      LEFT: THREE.MOUSE.ROTATE,
-      MIDDLE: THREE.MOUSE.DOLLY,
-      RIGHT: THREE.MOUSE.PAN
-    };
-
     const loader = new THREE.TextureLoader();
     const geometry = new THREE.IcosahedronGeometry(1, 12);
     const material = new THREE.MeshPhongMaterial({
@@ -152,7 +144,7 @@ const Globe = () => {
 
     const animate = () => {
       requestAnimationFrame(animate);
-      earthGroup.rotation.y += 0.00005; // Much slower rotation
+      earthGroup.rotation.y += 0.0002;
       renderer.render(scene, camera);
     };
     animate();
