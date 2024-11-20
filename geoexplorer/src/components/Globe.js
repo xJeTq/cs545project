@@ -144,10 +144,10 @@ const Globe = () => {
       countryLines.push(outline);
 
       // Create filled shape
-      const shapePoints = points.map(point => new THREE.Vector2(point.x, point.y));
+      // const shapePoints = points.map(point => new THREE.Vector2(point.x, point.y));
 
       // Create a shape using the projected points
-      const shape = new THREE.Shape(shapePoints);
+      // const shape = new THREE.Shape(shapePoints);
 
       // Create the geometry with depth to match the globe's surface
       const extrudeSettings = {
@@ -156,23 +156,23 @@ const Globe = () => {
         bevelEnabled: false
       };
 
-      const meshGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      // const meshGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
       // Create a new mesh for the filled shape
-      const fillMesh = new THREE.Mesh(meshGeometry, fillMaterial);
+      // const fillMesh = new THREE.Mesh(meshGeometry, fillMaterial);
 
       // Adjust the fill mesh position to sit on the globe's surface
-      const radius = 1; // The radius of your globe
-      fillMesh.geometry.computeBoundingBox();
-      const boundingBox = fillMesh.geometry.boundingBox;
-      const center = boundingBox.getCenter(new THREE.Vector3());
+      // const radius = 1; // The radius of your globe
+      // fillMesh.geometry.computeBoundingBox();
+      // const boundingBox = fillMesh.geometry.boundingBox;
+      // const center = boundingBox.getCenter(new THREE.Vector3());
 
-      fillMesh.position.set(center.x, center.y, radius); // Start position at the globe's surface
+      // fillMesh.position.set(center.x, center.y, radius); // Start position at the globe's surface
 
-      // Adjust to sit on the globe surface
-      fillMesh.position.add(new THREE.Vector3(center.x, center.y, center.z).normalize().multiplyScalar(radius));
+      // // Adjust to sit on the globe surface
+      // fillMesh.position.add(new THREE.Vector3(center.x, center.y, center.z).normalize().multiplyScalar(radius));
 
-      earthGroup.add(fillMesh);
+      // earthGroup.add(fillMesh);
     };
 
 
@@ -198,9 +198,8 @@ const Globe = () => {
           setSelectedCountry(intersectedObject.userData.name);
         }
 
-        // Convert intersection point to latitude and longitude
         const intersectionPoint = intersects[0].point;
-        const radius = intersectionPoint.length(); // Distance from origin (center of the globe)
+        const radius = intersectionPoint.length();
 
         // Calculate latitude and longitude from intersectionPoint
         const lat = Math.asin(intersectionPoint.y / radius) * (180 / Math.PI);
@@ -252,7 +251,8 @@ const Globe = () => {
           <h3>Selected Country: {selectedCountry.name}</h3>
           <p><strong>Capital:</strong> {selectedCountry.capital}</p>
           <p><strong>Population:</strong> {selectedCountry.population}</p>
-          <p><strong>Language:</strong> {selectedCountry.language}</p>
+          <p><strong>Currency(s):</strong> {selectedCountry.currency}</p>
+          <p><strong>Language(s):</strong> {selectedCountry.languages}</p>
         </div>
       )}
 
