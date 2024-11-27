@@ -1,3 +1,6 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
 const About = () => {
   console.log('About component rendered');
   return (
@@ -27,7 +30,10 @@ const About = () => {
         lineHeight: '30px',
         borderRadius: '8px'
       }}>
-        To read documentation, <a href="https://drive.google.com/file/d/1j5V98T_Fc5M4qf08lKxGq8ckmuqds2id/view?usp=drive_link" style={{ color: 'white', textDecoration: 'underline' }}>click here</a>.
+        To read documentation,{' '}
+        <Link to="/documentation" style={{ color: 'white', textDecoration: 'underline' }}>
+          click here
+        </Link>.
       </p>
       <p style={{
         position: 'absolute',
