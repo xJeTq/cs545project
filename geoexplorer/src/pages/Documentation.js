@@ -39,7 +39,7 @@ const Documentation = () => {
                         <strong> Three.js</strong>, and the country outlines are based on GeoJSON data, providing accurate geographical representation.
                     </p>
                     <p>
-                        * Please note that this a just a demo. The final product is still in development.
+                        * Please note that this is just a demo. The final product is still in development.
                     </p>
                 </section>
 
