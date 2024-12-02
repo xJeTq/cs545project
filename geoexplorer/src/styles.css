@@ -76,7 +76,6 @@ body {
   display: none;
 }
 
-/* styles.css or App.css */
 html,
 body {
   margin: 0;
@@ -84,51 +83,37 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* Prevent scroll bars */
 }
 
 #root {
   width: 100%;
   height: 100%;
   position: relative;
-  /* Ensure children can use absolute positioning */
 }
 
 #globeViz {
   width: 100vw;
-  /* Full width of the viewport */
   height: calc(100vh - 80px);
-  /* Full height minus the navbar */
   background-color: transparent;
-  /* Ensure globe background is transparent */
   position: absolute;
-  /* Position absolutely to fill the parent */
   top: 120px;
-  /* Increase this value to add more space for depth */
   left: 0;
-  /* Align to the left */
 }
 
 .info-box {
   position: fixed;
-  /* Keep it fixed to the viewport */
   top: 25%;
-  /* Move it down to 25% of the viewport height */
   right: 10px;
-  /* Keep the right position as is */
   background-color: rgba(31, 31, 31, 0.9);
-  /* Semi-transparent background */
   color: white;
   padding: 1rem;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
   z-index: 10;
-  /* Ensure it appears above other elements */
 }
 
 .visible {
   display: block;
-  /* Explicitly state that it should be visible */
 }
 
 html,
@@ -138,11 +123,8 @@ body {
   padding: 0;
   overflow: auto;
   overflow-x: hidden;
-  /* Prevent horizontal scrolling */
-  /* Allow scrolling */
 }
 
 #root {
   min-height: 100%;
-  /* Ensure content grows and allows scrolling */
 }

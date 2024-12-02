@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { getFresnelMat } from './getFresnelMat.js';
-import countryData from './countries.json'; // Import your countries.json
+import countryData from './countries.json';
 
 const Globe = () => {
   const mountRef = useRef(null);
@@ -82,8 +82,8 @@ const Globe = () => {
     let countryLines = [];
 
     const createCountryOutlines = (data) => {
-      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff }); // White outline
-      const fillMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.5, transparent: true }); // Semi-transparent red fill
+      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+      const fillMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.5, transparent: true });
 
       data.features.forEach((feature) => {
         const geometryType = feature.geometry.type;
@@ -121,12 +121,12 @@ const Globe = () => {
         if (geometryType === 'Polygon') {
           const coordinates = feature.geometry.coordinates[0];
           const points = createOutlineFromCoordinates(coordinates);
-          createOutlineAndFill(points, outlineMaterial, fillMaterial, feature.properties.SOVEREIGNT); // Pass country name
+          createOutlineAndFill(points, outlineMaterial, fillMaterial, feature.properties.SOVEREIGNT);
         } else if (geometryType === 'MultiPolygon') {
           feature.geometry.coordinates.forEach((polygon) => {
             const coordinates = polygon[0];
             const points = createOutlineFromCoordinates(coordinates);
-            createOutlineAndFill(points, outlineMaterial, fillMaterial, feature.properties.SOVEREIGNT); // Pass country name
+            createOutlineAndFill(points, outlineMaterial, fillMaterial, feature.properties.SOVEREIGNT);
           });
         }
       });
@@ -137,7 +137,7 @@ const Globe = () => {
     const createOutlineAndFill = (points, outlineMaterial, fillMaterial, countryName) => {
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
       const outline = new THREE.LineLoop(geometry, outlineMaterial);
-      outline.userData = { name: countryName }; // Set country name for the outline
+      outline.userData = { name: countryName };
       earthGroup.add(outline);
       countryLines.push(outline);
     };
@@ -173,7 +173,6 @@ const Globe = () => {
         if (intersectedObject.userData && intersectedObject.userData.name) {
           console.log('Country clicked:', intersectedObject.userData.name);
 
-          // Find the selected country data from your JSON file
           const countryInfo = countryData.find(
             country => country.name === intersectedObject.userData.name
           );
@@ -182,14 +181,13 @@ const Globe = () => {
             setSelectedCountry({
               name: countryInfo.name,
               capital: countryInfo.capital,
-              population: countryInfo.population.toLocaleString(),  // Format population with commas
-              currency: countryInfo.currency.name,  // Use currency name
+              population: countryInfo.population.toLocaleString(),
+              currency: countryInfo.currency.name,
               code: countryInfo.currency.code,
-              languages: countryInfo.languages.join(', ')  // Join language array into a string
+              languages: countryInfo.languages.join(', ')
             });
           }
 
-          // Log the coordinates (lat, lon) of the clicked point
           const latLon = getLatLonFromIntersect(intersects[0].point);
           console.log(`Coordinates: Latitude = ${latLon.lat}, Longitude = ${latLon.lon}`);
         }
@@ -244,10 +242,10 @@ const Globe = () => {
         </div>
       )}
 
-      {/* Note at the bottom left */}
+      { }
       <div style={{
         position: 'fixed',
-        bottom: '10px', // Adjust this to position it further up or down if needed
+        bottom: '10px',
         left: '10px',
         fontSize: '12px',
         color: '#ffffff',

@@ -3,7 +3,7 @@ import React from 'react';
 const Documentation = () => {
     return (
         <>
-            {/* GeoExplorer Documentation Title outside the container */}
+            { }
             <h1 style={{
                 textAlign: 'center',
                 fontSize: '36px',
@@ -12,7 +12,7 @@ const Documentation = () => {
                 fontWeight: 'bold',
             }}>GeoExplorer Documentation</h1>
 
-            {/* Content Container */}
+            { }
             <div style={{
                 fontFamily: 'Arial, sans-serif',
                 backgroundColor: 'rgba(31, 31, 31, 0.9)',
