@@ -255,7 +255,7 @@ const Globe = () => {
         boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
         zIndex: 5
       }}>
-        All data is from 2024
+        All data is from November 2024.
       </div>
     </div>
   );
