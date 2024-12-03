@@ -29,7 +29,7 @@ const Documentation = () => {
                 flexDirection: 'column',
             }}>
 
-                {/* Overview Section */}
+                { }
                 <section style={{ marginBottom: '30px' }}>
                     <h2 style={{ fontSize: '24px', marginBottom: '10px', textDecoration: 'underline' }}>Overview</h2>
                     <p>
@@ -43,7 +43,7 @@ const Documentation = () => {
                     </p>
                 </section>
 
-                {/* Key Features Section */}
+                { }
                 <section style={{ marginBottom: '30px' }}>
                     <h2 style={{ fontSize: '24px', marginBottom: '10px', textDecoration: 'underline' }}>Key Features</h2>
                     <p>
@@ -60,7 +60,7 @@ const Documentation = () => {
                     </p>
                 </section>
 
-                {/* Technologies Used Section */}
+                { }
                 <section style={{ marginBottom: '30px' }}>
                     <h2 style={{ fontSize: '24px', marginBottom: '10px', textDecoration: 'underline' }}>Technologies Used</h2>
                     <h3 style={{ fontSize: '20px', marginBottom: '5px' }}>Frontend</h3>
@@ -79,7 +79,7 @@ const Documentation = () => {
                     </p>
                 </section>
 
-                {/* Utilization Instructions Section */}
+                { }
                 <section style={{ marginBottom: '30px' }}>
                     <h2 style={{ fontSize: '24px', marginBottom: '10px', textDecoration: 'underline' }}>Utilization Instructions</h2>
                     <p>To run GeoExplorer, navigate to the link (https://geoexplorer-59a54.web.app/) or <a href="https://geoexplorer-59a54.web.app/" target="_blank" rel="noopener noreferrer" style={{
@@ -88,7 +88,7 @@ const Documentation = () => {
                     }}>click here</a>.</p>
                 </section>
 
-                {/* Features and Functionality Section */}
+                { }
                 <section>
                     <h2 style={{ fontSize: '24px', marginBottom: '10px', textDecoration: 'underline' }}>Features and Functionality</h2>
                     <p>
